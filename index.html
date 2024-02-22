@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name and Date Converter</title>
+    <script>
+        function convertFormat() {
+            const input = document.getElementById('input').value;
+            const parts = input.split(' ');
+
+            // Extract the name (last part) and the date (second-to-last part)
+            const name = parts.slice(0, -2).join(' ');
+            const date = parts[parts.length - 2];
+
+            // Convert the date to the desired format (DD-MM)
+            const [day, month] = date.split('-');
+
+            // Pad day and month with zeros if necessary
+            const paddedDay = day.padStart(2, '0');
+            const paddedMonth = month.padStart(2, '0');
+
+            // Create the formatted object
+            const formattedObject = {
+                name: name,
+                birthday: `${paddedDay}-${paddedMonth}`
+            };
+
+            // Display the formatted output
+            document.getElementById('output').innerText = JSON.stringify(formattedObject);
+        }
+    </script>
+</head>
+<body>
+    <h2>Name and Date Converter</h2>
+    <p>Enter the name and date in the format "Name Date" (e.g., "Shahu Nitin Bankar 27-06-2012"):</p>
+    <input type="text" id="input" placeholder="Enter name and date">
+    <button onclick="convertFormat()">Convert</button>
+    <div id="output"></div>
+</body>
+</html>
