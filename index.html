@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Name and Date Converter</title>
+    <style>
+        #output {
+            white-space: pre-line;
+        }
+    </style>
     <script>
         function convertFormat() {
             const inputText = document.getElementById('input').value.trim(); // Get input text
             const pairs = inputText.split('\n'); // Split input into pairs by newline
 
-            let outputText = "["; // Start output with an opening bracket
+            let outputText = "["; // Start output with opening bracket
             for (let i = 0; i < pairs.length; i++) {
                 const pair = pairs[i].trim();
                 if (pair !== "") {
@@ -26,11 +31,11 @@
                     // Add formatted output to the final output text
                     outputText += formattedObject;
                     if (i < pairs.length - 1) {
-                        outputText += ", "; // Add comma if it's not the last pair
+                        outputText += ",\n"; // Add comma and newline if it's not the last pair
                     }
                 }
             }
-            outputText += "]"; // Add closing bracket to complete the output
+            outputText += "]"; // End output with closing bracket
 
             // Display the formatted output
             document.getElementById('output').innerText = outputText;
@@ -39,9 +44,9 @@
 </head>
 <body>
     <h2>Name and Date Converter</h2>
-    <p>Enter the name and date in the format "Name Date" (e.g., Shahu Nitin Bankar 27-06-2012):</p>
+    <p>Enter the name and date in the format "Name Date" (e.g., "Shahu Nitin Bankar 27-06-2012"):</p>
     <textarea id="input" rows="5" cols="50" placeholder="Enter name and date"></textarea><br>
     <button onclick="convertFormat()">Convert</button>
-    <div id="output"></div>
+    <pre id="output"></pre>
 </body>
 </html>
