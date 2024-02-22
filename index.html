@@ -18,7 +18,11 @@
             for (let i = 0; i < pairs.length; i++) {
                 const pair = pairs[i].trim();
                 if (pair !== "") {
-                    const [name, date] = pair.split(' '); // Split each pair into name and date
+                    const parts = pair.split(' '); // Split each pair by space
+
+                    // Extract name and date
+                    const name = parts.slice(0, -1).join(' ');
+                    const date = parts[parts.length - 1];
 
                     // Extract day and month
                     const [day, month] = date.split('-');
@@ -55,7 +59,7 @@
 </head>
 <body>
     <h2>Name and Date Converter</h2>
-    <p>Enter the name and date in the format "Name Date" (e.g., Shahu Nitin Bankar 27-06-2012) one below another:</p>
+    <p>Enter the name and date in the format "Name Date" (e.g., "Shahu Nitin Bankar 27-06-2012"):</p>
     <textarea id="input" rows="5" cols="50" placeholder="Enter name and date"></textarea><br>
     <button onclick="convertFormat()">Convert</button>
     <button onclick="copyToClipboard()">Copy</button>
