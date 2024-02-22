@@ -40,13 +40,25 @@
             // Display the formatted output
             document.getElementById('output').innerText = outputText;
         }
+
+        function copyToClipboard() {
+            const outputText = document.getElementById('output').innerText;
+            navigator.clipboard.writeText(outputText)
+                .then(() => {
+                    alert('Copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+        }
     </script>
 </head>
 <body>
     <h2>Name and Date Converter</h2>
-    <p>Enter the name and date in the format "Name Date" (e.g., Shahu Nitin Bankar 27-06-2012): one below another</p>
+    <p>Enter the name and date in the format "Name Date" (e.g., Shahu Nitin Bankar 27-06-2012) one below another:</p>
     <textarea id="input" rows="5" cols="50" placeholder="Enter name and date"></textarea><br>
     <button onclick="convertFormat()">Convert</button>
+    <button onclick="copyToClipboard()">Copy</button>
     <pre id="output"></pre>
 </body>
 </html>
