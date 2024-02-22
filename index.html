@@ -6,35 +6,41 @@
     <title>Name and Date Converter</title>
     <script>
         function convertFormat() {
-            const input = document.getElementById('input').value;
-            const parts = input.split(' ');
+            const inputText = document.getElementById('input').value.trim(); // Get input text
+            const pairs = inputText.split('\n'); // Split input into pairs by newline
 
-            // Extract the name (last part) and the date (second-to-last part)
-            const name = parts.slice(0, -2).join(' ');
-            const date = parts[parts.length - 2];
+            let outputText = "["; // Start output with an opening bracket
+            for (let i = 0; i < pairs.length; i++) {
+                const pair = pairs[i].trim();
+                if (pair !== "") {
+                    const [name, date] = pair.split(' '); // Split each pair into name and date
 
-            // Convert the date to the desired format (DD-MM)
-            const [day, month] = date.split('-');
+                    // Extract day and month
+                    const [day, month] = date.split('-');
+                    const paddedDay = day.padStart(2, '0');
+                    const paddedMonth = month.padStart(2, '0');
 
-            // Pad day and month with zeros if necessary
-            const paddedDay = day.padStart(2, '0');
-            const paddedMonth = month.padStart(2, '0');
+                    // Construct the formatted output
+                    const formattedObject = `{ name: '${name}', birthday: '${paddedDay}-${paddedMonth}' }`;
 
-            // Create the formatted object
-            const formattedObject = {
-                name: name,
-                birthday: `${paddedDay}-${paddedMonth}`
-            };
+                    // Add formatted output to the final output text
+                    outputText += formattedObject;
+                    if (i < pairs.length - 1) {
+                        outputText += ", "; // Add comma if it's not the last pair
+                    }
+                }
+            }
+            outputText += "]"; // Add closing bracket to complete the output
 
             // Display the formatted output
-            document.getElementById('output').innerText = JSON.stringify(formattedObject);
+            document.getElementById('output').innerText = outputText;
         }
     </script>
 </head>
 <body>
     <h2>Name and Date Converter</h2>
     <p>Enter the name and date in the format "Name Date" (e.g., "Shahu Nitin Bankar 27-06-2012"):</p>
-    <input type="text" id="input" placeholder="Enter name and date">
+    <textarea id="input" rows="5" cols="50" placeholder="Enter name and date"></textarea><br>
     <button onclick="convertFormat()">Convert</button>
     <div id="output"></div>
 </body>
