@@ -5,44 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Name and Date Converter</title>
     <style>
-        #output {
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        pre {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             white-space: pre-line;
+        }
+
+        .error {
+            color: red;
+            font-style: italic;
+            margin-top: 5px;
         }
     </style>
     <script>
         function convertFormat() {
             const inputText = document.getElementById('input').value.trim(); // Get input text
+
+            if (inputText === "") {
+                document.getElementById('output').innerText = ""; // Clear output if input is empty
+                return;
+            }
+
             const pairs = inputText.split('\n'); // Split input into pairs by newline
 
             let outputText = "["; // Start output with opening bracket
+            let errors = [];
+
             for (let i = 0; i < pairs.length; i++) {
                 const pair = pairs[i].trim();
+
                 if (pair !== "") {
                     const parts = pair.split(' '); // Split each pair by space
 
-                    // Extract name and date
-                    const name = parts.slice(0, -1).join(' ');
-                    const date = parts[parts.length - 1];
+                    if (parts.length < 2) {
+                        errors.push(`Error in line ${i + 1}: Incomplete data.`);
+                        continue;
+                    }
 
-                    // Extract day and month
-                    const [day, month] = date.split('-');
+                    const name = parts.slice(0, -1).join(' '); // Extract name
+                    const date = parts[parts.length - 1]; // Extract date
+
+                    const dateParts = date.split('-'); // Split date into parts
+
+                    if (dateParts.length !== 3 || !isValidDate(dateParts[0], dateParts[1], dateParts[2])) {
+                        errors.push(`Error in line ${i + 1}: Invalid date format or date.`);
+                        continue;
+                    }
+
+                    const [day, month] = dateParts;
                     const paddedDay = day.padStart(2, '0');
                     const paddedMonth = month.padStart(2, '0');
 
-                    // Construct the formatted output
                     const formattedObject = `{ name: '${name}', birthday: '${paddedDay}-${paddedMonth}' }`;
 
-                    // Add formatted output to the final output text
                     outputText += formattedObject;
+
                     if (i < pairs.length - 1) {
-                        outputText += ",\n"; // Add comma and newline if it's not the last pair
+                        outputText += ",\n";
                     }
                 }
             }
-            outputText += "]"; // End output with closing bracket
 
-            // Display the formatted output
+            outputText += "]";
+
             document.getElementById('output').innerText = outputText;
+
+            if (errors.length > 0) {
+                document.getElementById('error').innerText = errors.join('\n');
+            } else {
+                document.getElementById('error').innerText = "";
+            }
         }
 
         function copyToClipboard() {
@@ -55,14 +141,29 @@
                     console.error('Error copying text: ', err);
                 });
         }
+
+        function isValidDate(year, month, day) {
+            const date = new Date(year, month - 1, day);
+            return (date.getFullYear() == year && date.getMonth() + 1 == month && date.getDate() == day);
+        }
+
+        function clearInput() {
+            document.getElementById('input').value = "";
+            document.getElementById('output').innerText = "";
+            document.getElementById('error').innerText = "";
+        }
     </script>
 </head>
 <body>
-    <h2>Name and Date Converter</h2>
-    <p>Enter the name and date in the format Name Date (e.g., Shahu Nitin Bankar 27-06-2012):</p>
-    <textarea id="input" rows="5" cols="50" placeholder="Enter name and date"></textarea><br>
-    <button onclick="convertFormat()">Convert</button>
-    <button onclick="copyToClipboard()">Copy</button>
-    <pre id="output"></pre>
+    <div class="container">
+        <h2>Name and Date Converter</h2>
+        <p>Enter the name and date in the format Name Date (e.g., Shahu Nitin Bankar 27-06-2012):</p>
+        <textarea id="input" rows="5" placeholder="Enter name and date"></textarea>
+        <button onclick="convertFormat()">Convert</button>
+        <button onclick="copyToClipboard()">Copy</button>
+        <button onclick="clearInput()">Clear</button>
+        <pre id="output"></pre>
+        <div id="error" class="error"></div>
+    </div>
 </body>
 </html>
